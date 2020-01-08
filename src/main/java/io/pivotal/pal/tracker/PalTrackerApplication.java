@@ -27,21 +27,6 @@ public class PalTrackerApplication {
 
 	@Bean
     TimeEntryRepository timeEntryRepository() {
-        if(getenv("ENV_NAME") != null && getenv("ENV_NAME").equalsIgnoreCase("test")) {
-            return new InMemoryTimeEntryRepository();
-        }
-        MysqlDataSource dataSource = new MysqlDataSource();
-        dataSource.setUrl(System.getenv("SPRING_DATASOURCE_URL"));
-        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
-        return new JdbcTimeEntryRepository(dataSource);
-    }
-
-    @Bean
-    public ObjectMapper jsonObjectMapper() {
-        return Jackson2ObjectMapperBuilder.json()
-                .serializationInclusion(JsonInclude.Include.NON_NULL) 
-                .featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS) 
-                .modules(new JavaTimeModule())
-                .build();
+        return new InMemoryTimeEntryRepository();
     }
 }

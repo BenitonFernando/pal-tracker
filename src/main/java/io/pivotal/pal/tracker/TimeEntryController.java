@@ -14,56 +14,50 @@ import java.util.List;
  * Demonstrates REST-based CRUD ops with injectable dependencies
  */
 @RestController
+@RequestMapping("/time-entries")
 public class TimeEntryController {
-    private final TimeEntryRepository timeEntryRepository;
+	private TimeEntryRepository timeEntriesRepo;
 
-    public TimeEntryController(
-            TimeEntryRepository timeEntryRepository)
-            {
-        this.timeEntryRepository = timeEntryRepository;
+    public TimeEntryController(TimeEntryRepository timeEntriesRepo) {
+        this.timeEntriesRepo = timeEntriesRepo;
     }
 
-    /**
-     * Get object from body using @RequestBody
-     */
-    @PostMapping("/time-entries")
-    public ResponseEntity<TimeEntry> create(@RequestBody TimeEntry timeEntryToCreate) throws SQLException {
-        TimeEntry created = this.timeEntryRepository.create(timeEntryToCreate);
-        ResponseEntity<TimeEntry> result = new ResponseEntity<TimeEntry>(created, HttpStatus.CREATED);
-        return result;
+    @PostMapping
+    public ResponseEntity<TimeEntry> create(@RequestBody TimeEntry timeEntry) {
+        TimeEntry createdTimeEntry = timeEntriesRepo.create(timeEntry);
+
+        return new ResponseEntity<>(createdTimeEntry, HttpStatus.CREATED);
     }
 
-    /**
-     * Get scalar from url path using @PathVariable
-     */
-    @GetMapping("/time-entries/{timeEntryId}")
-    public ResponseEntity<TimeEntry> read(@PathVariable long timeEntryId) throws SQLException {
-        TimeEntry entry = this.timeEntryRepository.find(timeEntryId);
-        if(entry != null){
-            return new ResponseEntity(entry, HttpStatus.OK);
+    @GetMapping("{id}")
+    public ResponseEntity<TimeEntry> read(@PathVariable Long id) {
+        TimeEntry timeEntry = timeEntriesRepo.find(id);
+        if (timeEntry != null) {
+            return new ResponseEntity<>(timeEntry, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
-        return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("/time-entries")
-    public ResponseEntity<List<TimeEntry>> list() throws SQLException {
-        return new ResponseEntity<>(this.timeEntryRepository.list(), HttpStatus.OK);
+    @GetMapping
+    public ResponseEntity<List<TimeEntry>> list() {
+        return new ResponseEntity<>(timeEntriesRepo.list(), HttpStatus.OK);
     }
 
-    @PutMapping("/time-entries/{timeEntryId}")
-    public ResponseEntity<TimeEntry> update(@PathVariable long timeEntryId, @RequestBody TimeEntry timeEntry) throws SQLException {
-        TimeEntry update = this.timeEntryRepository.update(timeEntryId, timeEntry);
-        if(update != null) {
-            return new ResponseEntity<TimeEntry>(update, HttpStatus.OK);
+    @PutMapping("{id}")
+    public ResponseEntity<TimeEntry> update(@PathVariable Long id, @RequestBody TimeEntry timeEntry) {
+        TimeEntry updatedTimeEntry = timeEntriesRepo.update(id, timeEntry);
+        if (updatedTimeEntry != null) {
+            return new ResponseEntity<>(updatedTimeEntry, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @DeleteMapping("/time-entries/{timeEntryId}")
-    public ResponseEntity delete(@PathVariable long timeEntryId) throws SQLException {
-        this.timeEntryRepository.delete(timeEntryId);
+    @DeleteMapping("{id}")
+    public ResponseEntity delete(@PathVariable Long id) {
+        timeEntriesRepo.delete(id);
+
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 }

@@ -10,7 +10,6 @@ public class WelcomeController {
 	public String welcomeMessage;
 			
     public WelcomeController(@Value("${welcome.message}")String welcomeMessage) {
-//		super();
 		this.welcomeMessage = welcomeMessage;
 	}
 
