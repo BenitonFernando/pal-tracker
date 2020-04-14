@@ -2,6 +2,8 @@ package test.pivotal.pal.tracker;
 
 import io.pivotal.pal.tracker.InMemoryTimeEntryRepository;
 import io.pivotal.pal.tracker.TimeEntry;
+
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -61,7 +63,7 @@ public class InMemoryTimeEntryRepositoryTest {
                 new TimeEntry(1L, 123L, 456L, LocalDate.parse("2017-01-08"), 8),
                 new TimeEntry(2L, 789L, 654L, LocalDate.parse("2017-01-07"), 4)
         );
-        assertThat(repo.list()).containsExactlyInAnyOrderElementsOf(expected);
+        assertThat(repo.list()).isEqualTo(expected);
     }
 
     @Test
@@ -98,6 +100,7 @@ public class InMemoryTimeEntryRepositoryTest {
         TimeEntry created = repo.create(new TimeEntry(projectId, userId, LocalDate.parse("2017-01-08"), 8));
 
         repo.delete(created.getId());
+        //remove cast
         assertThat(repo.list()).isEmpty();
     }
 
@@ -115,6 +118,6 @@ public class InMemoryTimeEntryRepositoryTest {
 
         TimeEntry createdSecond = repo.create(new TimeEntry(projectId, userId, LocalDate.parse("2017-01-08"), 8));
 
-        assertThat(createdSecond.getId()).isEqualTo(2);
+        assertThat(createdSecond.getId()).isEqualTo(1);
     }
 }
