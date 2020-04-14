@@ -5,4 +5,4 @@ applications:
   routes:
   - route: pal-tracker-beniton.cfapps.io
   env:
-    WELCOME_MESSAGE: Hello from the review environment.
+    WELCOME_MESSAGE: Hello from the review environment
